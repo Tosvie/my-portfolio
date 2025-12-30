@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acesso Restrito | Gerenciador</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --rosa: #ffbcca; --verde: #a8bfa1; --slate: #334155; --bg: #fdfafb; --glass: rgba(255, 255, 255, 0.85); }
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; user-select: none; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: var(--slate); display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow-x: hidden; }
+        #custom-cursor { position: fixed; width: 20px; height: 20px; background: var(--rosa); border-radius: 50%; pointer-events: none; z-index: 9999; mix-blend-mode: multiply; transition: transform 0.1s ease; }
+
+        /* Telas */
+        #login-screen { display: flex; flex-direction: column; width: 100%; max-width: 400px; padding: 40px; background: var(--glass); backdrop-filter: blur(20px); border-radius: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.05); text-align: center; border: 1px solid white; }
+        #admin-panel { display: none; width: 100%; max-width: 700px; padding: 20px; }
+
+        .admin-card { background: var(--glass); backdrop-filter: blur(25px); padding: 40px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.7); box-shadow: 0 25px 50px rgba(0,0,0,0.05); }
+        
+        input, textarea { width: 100%; padding: 15px; margin-bottom: 15px; border: 1px solid rgba(0,0,0,0.05); border-radius: 15px; outline: none; font-family: inherit; user-select: text; }
+        button { width: 100%; padding: 18px; background: var(--slate); color: white; border: none; border-radius: 15px; font-weight: 800; transition: 0.3s; }
+        button:hover { background: var(--rosa); transform: translateY(-3px); }
+
+        .list-item { background: white; padding: 15px; border-radius: 20px; display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+        .list-item img { width: 45px; height: 45px; border-radius: 10px; object-fit: cover; }
+        .btn-del { background: #fff0f0; color: #d32f2f; width: auto; padding: 8px 15px; font-size: 0.7rem; }
+    </style>
+</head>
+<body oncontextmenu="return false">
+    <div id="custom-cursor"></div>
+
+    <div id="login-screen">
+        <h2 style="margin-bottom: 20px;">Área Administrativa</h2>
+        <input type="email" id="login-email" placeholder="Seu e-mail">
+        <input type="password" id="login-pass" placeholder="Sua senha">
+        <button id="btn-login">Entrar no Sistema ✦</button>
+    </div>
+
+    <div id="admin-panel">
+        <div class="admin-card">
+            <div style="display:flex; justify-content: space-between; margin-bottom: 20px;">
+                <a href="index.html" style="text-decoration:none; color:var(--slate); font-size:0.7rem; font-weight:800;">← Sair</a>
+                <span id="user-logged" style="font-size:0.7rem; opacity:0.5;"></span>
+            </div>
+            <h1>Gerenciador Cloud</h1>
+            <form id="box-form">
+                <input type="text" id="badge" placeholder="Categoria" required>
+                <input type="text" id="titulo" placeholder="Título" required>
+                <textarea id="texto" rows="3" placeholder="Descrição" required></textarea>
+                <input type="file" id="fotoLocal" accept="image/*" required>
+                <button type="submit" id="btn-submit">Sincronizar na Nuvem</button>
+            </form>
+            <div id="lista-caixas"></div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAYHPLW8xv5-BI3CBrcExliepd0liPruCM",
+            authDomain: "anadrielle-667a8.firebaseapp.com",
+            projectId: "anadrielle-667a8",
+            storageBucket: "anadrielle-667a8.firebasestorage.app",
+            messagingSenderId: "249083749088",
+            appId: "1:249083749088:web:06d593eb95303460f1e685"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const loginScreen = document.getElementById('login-screen');
+        const adminPanel = document.getElementById('admin-panel');
+
+        // Verificar se já está logado
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                loginScreen.style.display = 'none';
+                adminPanel.style.display = 'block';
+                document.getElementById('user-logged').innerText = user.email;
+                renderizarLista();
+            }
+        });
+
+        // Botão de Login
+        document.getElementById('btn-login').onclick = async () => {
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-pass').value;
+            try {
+                await signInWithEmailAndPassword(auth, email, pass);
+            } catch (error) { alert("Acesso inválido."); }
+        };
+
+        // Adicionar Dados (Mesma lógica anterior, mas com segurança do Firebase)
+        document.getElementById('box-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const file = document.getElementById('fotoLocal').files[0];
+            const reader = new FileReader();
+            reader.onloadend = async () => {
+                await addDoc(collection(db, "caixas"), {
+                    badge: document.getElementById('badge').value.toUpperCase(),
+                    titulo: document.getElementById('titulo').value,
+                    texto: document.getElementById('texto').value,
+                    fotoData: reader.result
+                });
+                location.reload();
+            };
+            reader.readAsDataURL(file);
+        };
+
+        async function renderizarLista() {
+            const querySnapshot = await getDocs(collection(db, "caixas"));
+            const lista = document.getElementById('lista-caixas');
+            lista.innerHTML = "";
+            querySnapshot.forEach((docSnap) => {
+                const item = docSnap.data();
+                lista.innerHTML += `
+                    <div class="list-item">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <img src="${item.fotoData}">
+                            <strong>${item.titulo}</strong>
+                        </div>
+                        <button class="btn-del" onclick="deletarItem('${docSnap.id}')">Excluir</button>
+                    </div>`;
+            });
+        }
+
+        window.deletarItem = async (id) => {
+            if(confirm("Excluir definitivamente?")) {
+                await deleteDoc(doc(db, "caixas", id));
+                renderizarLista();
+            }
+        };
+    </script>
+
+    <script>
+        const cursor = document.getElementById('custom-cursor');
+        document.addEventListener('mousemove', (e) => { cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px'; });
+    </script>
+</body>
+</html>
