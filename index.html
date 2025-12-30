@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>AnA | Portfólio</title>
+    <title>AnAdrielle | Experiência Imersiva</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -11,14 +11,13 @@
             --white: #ffffff; --glass: rgba(255, 255, 255, 0.7);
         }
 
-        /* --- CONFIGURAÇÕES DE SEGURANÇA --- */
+        /* --- TRAVAS DE SEGURANÇA E CURSOR --- */
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none !important; -webkit-user-select: none !important; -webkit-touch-callout: none !important; -webkit-tap-highlight-color: transparent; }
         @media (min-width: 1024px) { * { cursor: none !important; } body { cursor: none !important; } a, button, img, input, span, div { cursor: none !important; } }
-        img { pointer-events: none; -webkit-user-drag: none; }
+        img { pointer-events: auto; -webkit-user-drag: none; }
         html { scroll-behavior: smooth; }
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: var(--slate); overflow-x: hidden; min-height: 100vh; position: relative; }
 
-        /* Cursor Customizado */
         #custom-cursor { position: fixed; width: 22px; height: 22px; background: var(--rosa); border-radius: 50%; pointer-events: none; z-index: 9999; mix-blend-mode: multiply; transition: transform 0.1s ease; display: none; }
         @media (min-width: 1024px) { #custom-cursor { display: block; } }
 
@@ -36,47 +35,27 @@
         .header-nav { display: flex; gap: 10px; }
         .nav-link { text-decoration: none; color: var(--slate); font-weight: 700; font-size: 0.75rem; padding: 10px 18px; background: rgba(255, 255, 255, 0.4); border: 1px solid rgba(255,255,255,0.5); border-radius: 100px; transition: 0.3s; }
 
-        /* --- HERO SECTION (NOVIDADE) --- */
-        .hero {
-            height: 70vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 20px; position: relative; z-index: 2; margin-top: 60px;
-        }
-        .hero h1 { font-size: clamp(2.5rem, 8vw, 4.5rem); font-weight: 800; letter-spacing: -2px; line-height: 1; margin-bottom: 20px; }
-        .hero p { max-width: 600px; font-size: 1.1rem; opacity: 0.7; line-height: 1.6; }
+        /* --- HERO SECTION --- */
+        .hero { height: 50vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 20px; position: relative; z-index: 2; margin-top: 60px; }
+        .hero h1 { font-size: clamp(2.2rem, 7vw, 4rem); font-weight: 800; letter-spacing: -2px; line-height: 1; margin-bottom: 20px; }
+        .hero p { max-width: 700px; font-size: 1rem; opacity: 0.7; line-height: 1.6; }
         .hero .highlight { color: var(--verde); }
 
-        /* --- FILTROS (NOVIDADE) --- */
-        .filter-container {
-            display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; position: sticky; top: 80px; z-index: 100; padding: 10px;
-        }
-        .filter-btn {
-            padding: 10px 20px; border-radius: 100px; border: 1px solid rgba(0,0,0,0.05); background: var(--glass); backdrop-filter: blur(10px);
-            font-size: 0.75rem; font-weight: 800; color: var(--slate); transition: 0.3s;
-        }
-        .filter-btn.active { background: var(--slate); color: white; transform: scale(1.05); }
+        /* --- FILTROS --- */
+        .filter-container { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; margin-bottom: 30px; position: sticky; top: 80px; z-index: 100; padding: 10px; }
+        .filter-btn { padding: 10px 18px; border-radius: 100px; border: 1px solid rgba(0,0,0,0.05); background: var(--glass); backdrop-filter: blur(10px); font-size: 0.7rem; font-weight: 800; color: var(--slate); transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
+        .filter-btn.active { background: var(--slate); color: white; transform: scale(1.05); border-color: var(--slate); }
 
-        /* --- GRID DE PROJETOS --- */
-        .section-title { text-align: center; font-weight: 800; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 3px; color: var(--verde); margin-bottom: 20px; }
-
-        #content-wrapper { 
-            position: relative; z-index: 2; display: grid; grid-template-columns: 1fr; gap: 40px; width: 100%; max-width: 1200px; margin: 0 auto 60px; padding: 0 20px;
-        }
+        /* --- GRID DE CARDS --- */
+        #content-wrapper { position: relative; z-index: 2; display: grid; grid-template-columns: 1fr; gap: 40px; width: 100%; max-width: 1200px; margin: 0 auto 60px; padding: 0 20px; }
         @media (min-width: 900px) { #content-wrapper { grid-template-columns: 1fr 1fr; padding: 0 40px; gap: 50px; } }
 
-        /* --- CARDS --- */
-        .dynamic-box {
-            display: flex; flex-direction: column; padding: 25px; background: var(--glass); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-            border-radius: 35px; border: 1px solid rgba(255,255,255,0.6); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03); 
-            transition: 0.6s cubic-bezier(0.165, 0.84, 0.44, 1); height: 100%; animation: reveal 0.8s ease forwards;
-        }
-        @keyframes reveal { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-
+        .dynamic-box { display: flex; flex-direction: column; padding: 25px; background: var(--glass); backdrop-filter: blur(20px); border-radius: 35px; border: 1px solid rgba(255,255,255,0.6); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03); transition: 0.6s cubic-bezier(0.165, 0.84, 0.44, 1); height: 100%; }
         .dynamic-box:hover { transform: translateY(-10px); border-color: var(--rosa); box-shadow: 0 20px 40px rgba(255, 188, 202, 0.25); }
 
-        .text-content { margin-bottom: 20px; flex-grow: 1; }
-        .text-content h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 10px; letter-spacing: -0.5px; }
+        .text-content h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 10px; }
         .text-content p { font-size: 0.95rem; line-height: 1.6; color: #53647a; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
         .dynamic-box.expanded p { -webkit-line-clamp: unset; display: block; }
-        
         .badge { display: inline-block; padding: 5px 12px; background: var(--rosa); border-radius: 100px; font-size: 0.6rem; font-weight: 800; margin-bottom: 10px; }
         .read-more-btn { color: var(--verde); font-weight: 800; font-size: 0.7rem; border: none; background: none; text-transform: uppercase; margin-top: 10px; }
 
@@ -87,24 +66,45 @@
         .visual-element::after { z-index: -1; transform: rotate(3deg) translate(6px, 6px); background: var(--rosa); opacity: 0.8; }
         .visual-element::before { z-index: -2; transform: rotate(-4deg) translate(-6px, 10px); background: var(--verde); opacity: 0.7; }
 
-        .dynamic-box:hover .visual-element::after { transform: rotate(6deg) translate(12px, 10px); }
-        .dynamic-box:hover .visual-element::before { transform: rotate(-7deg) translate(-12px, 18px); }
+        /* --- NOVO ZOOM ESTÉTICO E DINÂMICO --- */
+        #image-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.3); /* Fundo bem claro para não pesar */
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            z-index: 5000; display: none; align-items: center; justify-content: center;
+            opacity: 0; transition: opacity 0.4s ease;
+        }
+        #modal-img {
+            max-width: 80%; /* Não ocupa a tela toda */
+            max-height: 75vh;
+            border-radius: 30px;
+            padding: 10px; background: white; /* Moldura branca tipo foto */
+            box-shadow: 0 50px 100px rgba(0,0,0,0.15);
+            transform: scale(0.8) translateY(20px);
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); /* Efeito elástico (Spring) */
+        }
+        #image-modal.active { opacity: 1; }
+        #image-modal.active #modal-img { transform: scale(1) translateY(0); }
 
-        #progress-bar { position: fixed; top: 0; width: 100%; height: 5px; background: linear-gradient(90deg, var(--rosa), var(--verde)); z-index: 4000; transform-origin: left; scale: 0 1; }
         .footer-box { background: var(--slate); color: var(--white); border-radius: 50px 50px 0 0; padding: 70px 20px; text-align: center; position: relative; z-index: 2; }
     </style>
 </head>
-<body oncontextmenu="return false" oncopy="return false" oncut="return false" ondragstart="return false">
+<body oncontextmenu="return false">
 
     <div id="custom-cursor"></div>
-    <div id="progress-bar"></div>
+    <div id="progress-bar" style="position: fixed; top: 0; width: 100%; height: 5px; background: linear-gradient(90deg, var(--rosa), var(--verde)); z-index: 4000; transform-origin: left; scale: 0 1;"></div>
+
     <div class="blob" style="width: 450px; height: 450px; background: var(--verde); top: -100px; right: -50px;"></div>
-    <div class="blob" style="width: 350px; height: 350px; background: var(--rosa); bottom: -100px; left: -50px;"></div>
+    <div class="blob" style="width: 350px; height: 350px; background: var(--rosa); bottom: -100px; left: -100px;"></div>
+
+    <div id="image-modal" onclick="fecharZoom()">
+        <img id="modal-img" src="" alt="Zoom Estético">
+    </div>
 
     <header class="main-header">
         <div class="brand-logo">
             <div class="brand-icon">EI</div>
-            <span>AnA</span>
+            <span>AnAdrielle</span>
         </div>
         <nav class="header-nav">
             <a href="biograph.html" class="nav-link">✦ Bio</a>
@@ -113,20 +113,20 @@
     </header>
 
     <section class="hero">
-        <h1>Construindo <span class="highlight">Futuros</span>,<br>Projetando <span class="highlight">Insights</span>.</h1>
-        <p>Onde a precisão encontra o bem-estar. Utilizo o design para organizar ideias complexas em soluções simples, unindo a força das estruturas à delicadeza do detalhe para criar experiências digitais únicas.</p>
+        <h1>Construindo o <span class="highlight">Futuro</span>,<br>Projetando <span class="highlight">Insights</span>.</h1>
+        <p>Estética e cuidado em cada detalhe. Explore meus projetos e descobertas visuais.</p>
     </section>
-
-    <div class="section-title">Meus Projetos</div>
 
     <div class="filter-container" id="filters">
         <button class="filter-btn active" onclick="filtrar('Tudo', this)">Tudo</button>
         <button class="filter-btn" onclick="filtrar('ODONTO', this)">Odonto</button>
-        <button class="filter-btn" onclick="filtrar('ENGENHARIA', this)">Engenharia</button>
+        <button class="filter-btn" onclick="filtrar('ANIMAIS', this)">Animais</button>
+        <button class="filter-btn" onclick="filtrar('QUARTOS', this)">Quartos</button>
+        <button class="filter-btn" onclick="filtrar('OBJETOS', this)">Objetos</button>
     </div>
 
     <div id="content-wrapper">
-        <div id="loading" style="grid-column: 1/-1; text-align:center; padding:50px; opacity:0.5;">Conectando ao banco de dados...</div>
+        <div id="loading" style="grid-column: 1/-1; text-align:center; padding:50px; opacity:0.5;">Conectando...</div>
     </div>
 
     <footer class="footer-box">
@@ -157,11 +157,11 @@
                 const querySnapshot = await getDocs(collection(db, "caixas"));
                 todosOsProjetos = querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 renderizarSite(todosOsProjetos);
-            } catch (e) { wrapper.innerHTML = "<p>Erro ao carregar.</p>"; }
+            } catch (e) { wrapper.innerHTML = "<p>Erro ao carregar dados.</p>"; }
         }
 
         window.renderizarSite = (lista) => {
-            wrapper.innerHTML = lista.length ? "" : "<p style='grid-column: 1/-1; text-align:center; opacity:0.5;'>Nenhum item nesta categoria.</p>";
+            wrapper.innerHTML = lista.length ? "" : "<p style='grid-column:1/-1; text-align:center;'>Nenhum item aqui.</p>";
             lista.forEach((item) => {
                 wrapper.innerHTML += `
                     <div class="dynamic-box">
@@ -171,7 +171,7 @@
                             <p>${item.texto}</p>
                             <button class="read-more-btn" onclick="this.parentElement.parentElement.classList.toggle('expanded')">Ler mais +</button>
                         </div>
-                        <div class="visual-element">
+                        <div class="visual-element" onclick="abrirZoom('${item.fotoData}')">
                             <img src="${item.fotoData}" alt="${item.titulo}" loading="lazy">
                         </div>
                     </div>`;
@@ -181,13 +181,23 @@
         window.filtrar = (categoria, btn) => {
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            
-            if(categoria === 'Tudo') {
-                renderizarSite(todosOsProjetos);
-            } else {
-                const filtrados = todosOsProjetos.filter(p => p.badge.includes(categoria));
-                renderizarSite(filtrados);
-            }
+            if(categoria === 'Tudo') renderizarSite(todosOsProjetos);
+            else renderizarSite(todosOsProjetos.filter(p => p.badge.toUpperCase().includes(categoria.toUpperCase())));
+        };
+
+        // CONTROLE DO ZOOM DINÂMICO
+        window.abrirZoom = (src) => {
+            const modal = document.getElementById('image-modal');
+            const img = document.getElementById('modal-img');
+            img.src = src;
+            modal.style.display = 'flex';
+            setTimeout(() => { modal.classList.add('active'); }, 10);
+        };
+
+        window.fecharZoom = () => {
+            const modal = document.getElementById('image-modal');
+            modal.classList.remove('active');
+            setTimeout(() => { modal.style.display = 'none'; }, 400);
         };
 
         carregarProjetos();
@@ -204,6 +214,4 @@
         });
     </script>
 </body>
-
 </html>
-
