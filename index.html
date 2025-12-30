@@ -46,43 +46,67 @@
         .filter-btn { padding: 10px 18px; border-radius: 100px; border: 1px solid rgba(0,0,0,0.05); background: var(--glass); backdrop-filter: blur(10px); font-size: 0.7rem; font-weight: 800; color: var(--slate); transition: 0.3s; text-transform: uppercase; letter-spacing: 1px; }
         .filter-btn.active { background: var(--slate); color: white; transform: scale(1.05); border-color: var(--slate); }
 
+        .section-title { text-align: center; font-weight: 800; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 3px; color: var(--verde); margin-bottom: 20px; }
+
         /* --- GRID DE CARDS --- */
         #content-wrapper { position: relative; z-index: 2; display: grid; grid-template-columns: 1fr; gap: 40px; width: 100%; max-width: 1200px; margin: 0 auto 60px; padding: 0 20px; }
-        @media (min-width: 900px) { #content-wrapper { grid-template-columns: 1fr 1fr; padding: 0 40px; gap: 50px; } }
+        @media (min-width: 900px) { #content-wrapper { grid-template-columns: 1fr 1fr; padding: 0 40px; gap: 60px; } }
 
-        .dynamic-box { display: flex; flex-direction: column; padding: 25px; background: var(--glass); backdrop-filter: blur(20px); border-radius: 35px; border: 1px solid rgba(255,255,255,0.6); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03); transition: 0.6s cubic-bezier(0.165, 0.84, 0.44, 1); height: 100%; }
-        .dynamic-box:hover { transform: translateY(-10px); border-color: var(--rosa); box-shadow: 0 20px 40px rgba(255, 188, 202, 0.25); }
+        /* DINAMICIDADE DOS CARDS */
+        .dynamic-box { 
+            display: flex; flex-direction: column; padding: 30px; 
+            background: var(--glass); backdrop-filter: blur(20px); 
+            border-radius: 40px; border: 1px solid rgba(255,255,255,0.6); 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03); 
+            transition: all 0.6s cubic-bezier(0.165, 0.84, 0.44, 1); 
+            height: 100%; 
+            animation: reveal 0.8s ease forwards; 
+        }
+        @keyframes reveal { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        .text-content h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 10px; }
+        /* HOVER DO CARD */
+        .dynamic-box:hover { 
+            transform: translateY(-15px) scale(1.01); 
+            border-color: var(--rosa); 
+            background: rgba(255, 255, 255, 0.85);
+            box-shadow: 0 30px 60px rgba(255, 188, 202, 0.3); 
+        }
+
+        .text-content h2 { font-size: 1.5rem; font-weight: 800; margin-bottom: 10px; transition: 0.3s; }
+        .dynamic-box:hover .text-content h2 { color: var(--slate); }
+        
         .text-content p { font-size: 0.95rem; line-height: 1.6; color: #53647a; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
         .dynamic-box.expanded p { -webkit-line-clamp: unset; display: block; }
         .badge { display: inline-block; padding: 5px 12px; background: var(--rosa); border-radius: 100px; font-size: 0.6rem; font-weight: 800; margin-bottom: 10px; }
-        .read-more-btn { color: var(--verde); font-weight: 800; font-size: 0.7rem; border: none; background: none; text-transform: uppercase; margin-top: 10px; }
+        .read-more-btn { color: var(--verde); font-weight: 800; font-size: 0.7rem; border: none; background: none; text-transform: uppercase; margin-top: 10px; transition: 0.3s; }
+        .read-more-btn:hover { letter-spacing: 1px; color: var(--rosa); }
 
-        /* --- PILHA DE CARTAS --- */
-        .visual-element { width: 100%; height: 220px; position: relative; z-index: 1; margin-top: 15px; }
-        .visual-element img { width: 100%; height: 100%; object-fit: cover; transition: 0.6s; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); background: var(--white); position: relative; z-index: 2; }
-        .visual-element::before, .visual-element::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; border-radius: 20px; transition: 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        /* --- PILHA DE CARTAS DINÂMICA --- */
+        .visual-element { width: 100%; height: 240px; position: relative; z-index: 1; margin-top: 20px; }
+        
+        .visual-element img { 
+            width: 100%; height: 100%; object-fit: cover; 
+            transition: transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1); 
+            border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+            background: var(--white); position: relative; z-index: 2; 
+        }
+        
+        .visual-element::before, .visual-element::after { 
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+            border-radius: 25px; transition: all 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+        }
+        
         .visual-element::after { z-index: -1; transform: rotate(3deg) translate(6px, 6px); background: var(--rosa); opacity: 0.8; }
         .visual-element::before { z-index: -2; transform: rotate(-4deg) translate(-6px, 10px); background: var(--verde); opacity: 0.7; }
 
-        /* --- NOVO ZOOM ESTÉTICO E DINÂMICO --- */
-        #image-modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(255, 255, 255, 0.3); /* Fundo bem claro para não pesar */
-            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-            z-index: 5000; display: none; align-items: center; justify-content: center;
-            opacity: 0; transition: opacity 0.4s ease;
-        }
-        #modal-img {
-            max-width: 80%; /* Não ocupa a tela toda */
-            max-height: 75vh;
-            border-radius: 30px;
-            padding: 10px; background: white; /* Moldura branca tipo foto */
-            box-shadow: 0 50px 100px rgba(0,0,0,0.15);
-            transform: scale(0.8) translateY(20px);
-            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); /* Efeito elástico (Spring) */
-        }
+        /* ANIMAÇÃO DE HOVER NA PILHA */
+        .dynamic-box:hover .visual-element img { transform: scale(1.08); }
+        .dynamic-box:hover .visual-element::after { transform: rotate(8deg) translate(20px, 15px); }
+        .dynamic-box:hover .visual-element::before { transform: rotate(-10deg) translate(-20px, 25px); }
+
+        /* --- ZOOM ESTÉTICO --- */
+        #image-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.3); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: 5000; display: none; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.4s ease; }
+        #modal-img { max-width: 80%; max-height: 75vh; border-radius: 30px; padding: 10px; background: white; box-shadow: 0 50px 100px rgba(0,0,0,0.15); transform: scale(0.8) translateY(20px); transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
         #image-modal.active { opacity: 1; }
         #image-modal.active #modal-img { transform: scale(1) translateY(0); }
 
@@ -126,8 +150,7 @@
     </div>
 
     <div id="content-wrapper">
-        <div id="loading" style="grid-column: 1/-1; text-align:center; padding:50px; opacity:0.5;">Conectando...</div>
-    </div>
+        </div>
 
     <footer class="footer-box">
         <h2 style="margin-bottom: 25px; font-size: 1.8rem; font-weight: 800;">Vamos conversar?</h2>
@@ -185,7 +208,6 @@
             else renderizarSite(todosOsProjetos.filter(p => p.badge.toUpperCase().includes(categoria.toUpperCase())));
         };
 
-        // CONTROLE DO ZOOM DINÂMICO
         window.abrirZoom = (src) => {
             const modal = document.getElementById('image-modal');
             const img = document.getElementById('modal-img');
