@@ -11,45 +11,95 @@
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: var(--slate); display: flex; justify-content: center; align-items: center; min-height: 100vh; overflow-x: hidden; }
         #custom-cursor { position: fixed; width: 20px; height: 20px; background: var(--rosa); border-radius: 50%; pointer-events: none; z-index: 9999; mix-blend-mode: multiply; transition: transform 0.1s ease; }
 
-        /* Telas */
         #login-screen { display: flex; flex-direction: column; width: 100%; max-width: 400px; padding: 40px; background: var(--glass); backdrop-filter: blur(20px); border-radius: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.05); text-align: center; border: 1px solid white; }
         #admin-panel { display: none; width: 100%; max-width: 700px; padding: 20px; }
 
         .admin-card { background: var(--glass); backdrop-filter: blur(25px); padding: 40px; border-radius: 40px; border: 1px solid rgba(255,255,255,0.7); box-shadow: 0 25px 50px rgba(0,0,0,0.05); }
-        
-        input, textarea { width: 100%; padding: 15px; margin-bottom: 15px; border: 1px solid rgba(0,0,0,0.05); border-radius: 15px; outline: none; font-family: inherit; user-select: text; }
-        button { width: 100%; padding: 18px; background: var(--slate); color: white; border: none; border-radius: 15px; font-weight: 800; transition: 0.3s; }
-        button:hover { background: var(--rosa); transform: translateY(-3px); }
+        h1 { margin-bottom: 30px; font-weight: 800; border-left: 6px solid var(--rosa); padding-left: 20px; letter-spacing: -1px; }
 
-        .list-item { background: white; padding: 15px; border-radius: 20px; display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
-        .list-item img { width: 45px; height: 45px; border-radius: 10px; object-fit: cover; }
-        .btn-del { background: #fff0f0; color: #d32f2f; width: auto; padding: 8px 15px; font-size: 0.7rem; }
+        /* ESTILO DOS INPUTS */
+        input, textarea, select { 
+            width: 100%; padding: 16px; margin-bottom: 15px; 
+            border: 1px solid rgba(0,0,0,0.08); border-radius: 18px; 
+            outline: none; font-family: inherit; user-select: text; 
+            background: rgba(255, 255, 255, 0.8); transition: 0.3s;
+            font-size: 0.9rem; color: var(--slate);
+        }
+        input:focus, textarea:focus, select:focus { border-color: var(--rosa); background: white; box-shadow: 0 0 15px rgba(255, 188, 202, 0.3); }
+
+        /* CUSTOM SELECT ARROW */
+        .select-wrapper { position: relative; width: 100%; }
+        .select-wrapper::after {
+            content: '▼'; position: absolute; right: 20px; top: 22px; 
+            font-size: 0.6rem; pointer-events: none; opacity: 0.5;
+        }
+        select { appearance: none; -webkit-appearance: none; padding-right: 45px; }
+
+        /* GRUPO DE CATEGORIA */
+        .category-container { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 5px; }
+        .btn-toggle-cat { 
+            width: 55px; height: 55px; background: var(--slate); border: none; 
+            border-radius: 18px; color: white; font-size: 1.4rem; font-weight: 400; 
+            display: flex; align-items: center; justify-content: center; 
+            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+        }
+        .btn-toggle-cat:hover { background: var(--rosa); color: var(--slate); transform: rotate(90deg) scale(1.05); }
+        .btn-toggle-cat.active { background: var(--verde); transform: rotate(0deg); }
+
+        button#btn-submit { width: 100%; padding: 20px; background: var(--slate); color: white; border: none; border-radius: 18px; font-weight: 800; transition: 0.3s; margin-top: 10px; }
+        button#btn-submit:hover { background: var(--rosa); color: var(--slate); transform: translateY(-3px); box-shadow: 0 10px 20px rgba(255, 188, 202, 0.4); }
+
+        .list-item { background: white; padding: 18px; border-radius: 25px; display: flex; justify-content: space-between; align-items: center; margin-top: 15px; border: 1px solid rgba(0,0,0,0.02); }
+        .list-item img { width: 50px; height: 50px; border-radius: 12px; object-fit: cover; }
+        .btn-del { background: #fff0f0; color: #d32f2f; width: auto; padding: 10px 20px; border-radius: 12px; font-size: 0.7rem; font-weight: 800; transition: 0.2s; }
+        .btn-del:hover { background: #d32f2f; color: white; }
     </style>
 </head>
 <body oncontextmenu="return false">
     <div id="custom-cursor"></div>
 
     <div id="login-screen">
-        <h2 style="margin-bottom: 20px;">Área Administrativa</h2>
-        <input type="email" id="login-email" placeholder="Seu e-mail">
-        <input type="password" id="login-pass" placeholder="Sua senha">
-        <button id="btn-login">Entrar no Sistema ✦</button>
+        <h2 style="margin-bottom: 25px; font-weight: 800;">Acesso Restrito</h2>
+        <input type="email" id="login-email" placeholder="E-mail do administrador">
+        <input type="password" id="login-pass" placeholder="Senha mestre">
+        <button onclick="login()" style="width:100%; padding:18px; border-radius:15px; border:none; background:var(--slate); color:white; font-weight:800;">Entrar ✦</button>
     </div>
 
     <div id="admin-panel">
         <div class="admin-card">
-            <div style="display:flex; justify-content: space-between; margin-bottom: 20px;">
-                <a href="index.html" style="text-decoration:none; color:var(--slate); font-size:0.7rem; font-weight:800;">← Sair</a>
-                <span id="user-logged" style="font-size:0.7rem; opacity:0.5;"></span>
+            <div style="display:flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+                <a href="index.html" style="text-decoration:none; color:var(--slate); font-size:0.7rem; font-weight:800; opacity: 0.5;">← VOLTAR AO SITE</a>
+                <span id="user-logged" style="font-size:0.6rem; font-weight:800; background: var(--verde); color: white; padding: 5px 12px; border-radius: 50px;"></span>
             </div>
-            <h1>Gerenciador Cloud</h1>
+            
+            <h1>Gerenciador</h1>
+            
             <form id="box-form">
-                <input type="text" id="badge" placeholder="Categoria" required>
-                <input type="text" id="titulo" placeholder="Título" required>
-                <textarea id="texto" rows="3" placeholder="Descrição" required></textarea>
+                <label style="font-size: 0.65rem; font-weight: 800; margin-left: 5px; opacity: 0.4; letter-spacing: 1px;">CATEGORIA</label>
+                <div class="category-container">
+                    <div class="select-wrapper" id="select-area">
+                        <select id="badge-select">
+                            <option value="ODONTO">Odontologia</option>
+                            <option value="ANIMAIS">Animais</option>
+                            <option value="QUARTOS">Quartos</option>
+                            <option value="OBJETOS">Objetos</option>
+                        </select>
+                    </div>
+                    <input type="text" id="badge-custom" placeholder="Nome da nova categoria..." style="display: none; margin-bottom: 0;">
+                    <button type="button" class="btn-toggle-cat" id="toggle-cat" title="Outra categoria">+</button>
+                </div>
+
+                <label style="font-size: 0.65rem; font-weight: 800; margin-left: 5px; opacity: 0.4; letter-spacing: 1px; margin-top: 15px; display: block;">SOBRE O PROJETO</label>
+                <input type="text" id="titulo" placeholder="Título impactante" required>
+                <textarea id="texto" rows="3" placeholder="Conte a história deste projeto..." required></textarea>
+                
+                <label style="font-size: 0.65rem; font-weight: 800; margin-left: 5px; opacity: 0.4; letter-spacing: 1px;">IMAGEM DO PROJETO</label>
                 <input type="file" id="fotoLocal" accept="image/*" required>
-                <button type="submit" id="btn-submit">Sincronizar na Nuvem</button>
+                
+                <button type="submit" id="btn-submit">Sincronizar na Nuvem ✦</button>
             </form>
+
+                <label style="font-size: 0.65rem; font-weight: 800; margin: 30px 0 15px 5px; display: block; opacity: 0.4; letter-spacing: 1px;">PROJETOS PUBLICADOS</label>
             <div id="lista-caixas"></div>
         </div>
     </div>
@@ -72,64 +122,90 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        const loginScreen = document.getElementById('login-screen');
-        const adminPanel = document.getElementById('admin-panel');
+        // --- ALTERNAR CATEGORIA ---
+        const btnToggle = document.getElementById('toggle-cat');
+        const selectArea = document.getElementById('select-area');
+        const inputCat = document.getElementById('badge-custom');
+        let modeCustom = false;
 
-        // Verificar se já está logado
+        btnToggle.onclick = () => {
+            modeCustom = !modeCustom;
+            if(modeCustom) {
+                selectArea.style.display = 'none';
+                inputCat.style.display = 'block';
+                btnToggle.innerText = '×';
+                btnToggle.classList.add('active');
+            } else {
+                selectArea.style.display = 'block';
+                inputCat.style.display = 'none';
+                btnToggle.innerText = '+';
+                btnToggle.classList.remove('active');
+            }
+        };
+
+        // --- AUTH ---
+        window.login = async () => {
+            const e = document.getElementById('login-email').value;
+            const p = document.getElementById('login-pass').value;
+            try { await signInWithEmailAndPassword(auth, e, p); } 
+            catch (err) { alert("Acesso negado."); }
+        };
+
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                loginScreen.style.display = 'none';
-                adminPanel.style.display = 'block';
-                document.getElementById('user-logged').innerText = user.email;
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('admin-panel').style.display = 'block';
+                document.getElementById('user-logged').innerText = user.email.split('@')[0].toUpperCase();
                 renderizarLista();
             }
         });
 
-        // Botão de Login
-        document.getElementById('btn-login').onclick = async () => {
-            const email = document.getElementById('login-email').value;
-            const pass = document.getElementById('login-pass').value;
-            try {
-                await signInWithEmailAndPassword(auth, email, pass);
-            } catch (error) { alert("Acesso inválido."); }
-        };
-
-        // Adicionar Dados (Mesma lógica anterior, mas com segurança do Firebase)
+        // --- ENVIO ---
         document.getElementById('box-form').onsubmit = async (e) => {
             e.preventDefault();
+            const btn = document.getElementById('btn-submit');
+            btn.innerText = "Sincronizando..."; btn.disabled = true;
+
+            const category = modeCustom ? inputCat.value : document.getElementById('badge-select').value;
             const file = document.getElementById('fotoLocal').files[0];
             const reader = new FileReader();
+
             reader.onloadend = async () => {
-                await addDoc(collection(db, "caixas"), {
-                    badge: document.getElementById('badge').value.toUpperCase(),
-                    titulo: document.getElementById('titulo').value,
-                    texto: document.getElementById('texto').value,
-                    fotoData: reader.result
-                });
-                location.reload();
+                try {
+                    await addDoc(collection(db, "caixas"), {
+                        badge: category.toUpperCase(),
+                        titulo: document.getElementById('titulo').value,
+                        texto: document.getElementById('texto').value,
+                        fotoData: reader.result
+                    });
+                    location.reload();
+                } catch (err) { alert("Erro ao salvar."); btn.disabled = false; }
             };
             reader.readAsDataURL(file);
         };
 
         async function renderizarLista() {
-            const querySnapshot = await getDocs(collection(db, "caixas"));
+            const snap = await getDocs(collection(db, "caixas"));
             const lista = document.getElementById('lista-caixas');
             lista.innerHTML = "";
-            querySnapshot.forEach((docSnap) => {
-                const item = docSnap.data();
+            snap.forEach((d) => {
+                const item = d.data();
                 lista.innerHTML += `
                     <div class="list-item">
-                        <div style="display:flex; align-items:center; gap:10px;">
+                        <div style="display:flex; align-items:center; gap:15px;">
                             <img src="${item.fotoData}">
-                            <strong>${item.titulo}</strong>
+                            <div>
+                                <p style="font-size:0.55rem; font-weight:800; color:var(--verde); letter-spacing:1px;">${item.badge}</p>
+                                <strong style="font-size:0.9rem;">${item.titulo}</strong>
+                            </div>
                         </div>
-                        <button class="btn-del" onclick="deletarItem('${docSnap.id}')">Excluir</button>
+                        <button class="btn-del" onclick="deletar('${d.id}')">Excluir</button>
                     </div>`;
             });
         }
 
-        window.deletarItem = async (id) => {
-            if(confirm("Excluir definitivamente?")) {
+        window.deletar = async (id) => {
+            if(confirm("Confirmar exclusão?")) {
                 await deleteDoc(doc(db, "caixas", id));
                 renderizarLista();
             }
@@ -138,7 +214,10 @@
 
     <script>
         const cursor = document.getElementById('custom-cursor');
-        document.addEventListener('mousemove', (e) => { cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px'; });
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
     </script>
 </body>
 </html>
